@@ -1,12 +1,12 @@
 import { login, getUserInfo } from '@/api/user.js'
 import md5 from 'md5'
-import * as utils from '../../utils/storage'
+import * as utils from '@/utils/storage.js'
 
 import { TOKEN, USER_INFO } from '../../common/common.js'
 import router from '../../router/index.js'
-import { setTimeStamp } from '../../utils/auth'
+import { setTimeStamp } from '@/utils/auth.js'
 
-console.log(utils)
+// console.log(utils)
 const state = {
   token: utils.getItem(TOKEN) || '',
   userInfo: {}
@@ -56,7 +56,7 @@ const actions = {
     getUserInfo()
       .then((res) => {
         commit('setUserInfo', res)
-        console.log(res)
+        // console.log(res)
       })
       .catch((err) => {
         console.log(err)
