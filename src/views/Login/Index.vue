@@ -9,7 +9,8 @@
     >
       <!-- 用户登陆 -->
       <div class="title-container">
-        <h3 class="title">用户登陆</h3>
+        <h3 class="title">{{ $t('msg.login.title') }}</h3>
+        <selectLang class="select-lang" />
       </div>
       <!-- 第一块 -->
       <el-form-item prop="username">
@@ -48,8 +49,10 @@
         type="primary"
         style="width: 100%; margin-top: 30px"
         @click="handleLogin"
-        >登陆</el-button
+        >{{ $t('msg.login.loginBtn') }}</el-button
       >
+      <!-- 账号tips -->
+      <div class="tips" v-html="$t('msg.login.desc')"></div>
     </el-form>
 
     <!-- 使用svg -->
@@ -58,11 +61,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 // 具名导出 要加{}
-import { passwordValidate } from './rule.js'
+import { passwordValidator, usernameValidator } from './rule.js'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import SelectLang from '@/components/SelectLang/index.vue'
+// import { useI18n } from 'vue-i18n'
+// const i18n = useI18n()
 // 表单数据
 const loginForm = ref({
   username: 'super-admin',
@@ -83,14 +89,15 @@ const loginRules = ref({
       // 失去焦点
       trigger: 'blur',
       // 提示信息
-      message: '账号不能为空'
+      // message: i18n.t('msg.login.usernameRule') // 不具备响应式
+      validator: usernameValidator()
     }
   ],
   password: [
     {
       trigger: 'blur',
       // 对整个表单作验证。 参数为一个回调函数。 验证表单后，回调函数会包含两个参数：一个布尔值，表示表单验证是否通过；一个对象，包含所有未通过验证的字段。 若不传入回调函数，则会返回一个 promise
-      validator: passwordValidate
+      validator: passwordValidator()
     }
   ]
 })
@@ -117,6 +124,16 @@ const handleLogin = () => {
     })
   })
 }
+
+// 监听getters.language的变化
+watch(
+  () => store.getters.language,
+  (newValue, oldValue) => {
+    // 中英文切换 验证重新执行
+    loginRef.value.validateField('username')
+    loginRef.value.validateField('password')
+  }
+)
 </script>
 <style lang="scss" scoped>
 $bg: #2d3a4b;
@@ -145,6 +162,15 @@ $cursor: #fff;
       margin: 0 auto 40px auto;
       text-align: center;
       font-weight: bold;
+    }
+    :deep(.select-lang) {
+      position: absolute;
+      top: 4px;
+      right: 0px;
+      // background-color: white;
+      font-size: 20px;
+      border-radius: 4px;
+      cursor: pointer;
     }
   }
 }
@@ -183,6 +209,13 @@ $cursor: #fff;
     color: $dark_gray;
     vertical-align: middle;
     display: inline-block;
+  }
+
+  .tips {
+    font-size: 14px;
+    line-height: 28px;
+    color: #fff;
+    margin-bottom: 10px;
   }
 }
 </style>

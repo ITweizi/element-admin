@@ -5,6 +5,8 @@
     <!-- 面包屑 -->
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
+      <!-- 国际化按钮 -->
+      <select-lang class="right-menu-item" />
       <el-dropdown class="avatar-container">
         <!-- 头像 -->
         <div class="avatar-wrapper">
@@ -12,9 +14,11 @@
         </div>
         <template #dropdown>
           <el-dropdown-menu class="user-drop-down">
-            <el-dropdown-item>首页</el-dropdown-item>
-            <el-dropdown-item>课程主页</el-dropdown-item>
-            <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
+            <el-dropdown-item>{{ $t('msg.navBar.home') }}</el-dropdown-item>
+            <el-dropdown-item>{{ $t('msg.navBar.course') }}</el-dropdown-item>
+            <el-dropdown-item @click="logout">{{
+              $t('msg.navBar.logout')
+            }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -26,6 +30,7 @@ import avatar from '@/assets/帅气的伟子.jpg'
 import { useStore } from 'vuex'
 import Cuttle from '@/components/cuttle/index.vue'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import SelectLang from '@/components/SelectLang/index.vue'
 const store = useStore()
 // 主动退出
 const logout = () => {
@@ -40,6 +45,19 @@ const logout = () => {
   position: relative;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  // :deep  ::v-deep
+  ::v-deep(.right-menu-item) {
+    display: inline-block;
+    padding: 0 18px 0 0;
+    font-size: 24px;
+    color: #ccc;
+    vertical-align: text-bottom;
+    // &:hover {
+    //   width: 10px;
+    //   height: 10px;
+    //   background-color: rgba(0, 0, 0, 0.1);
+    // }
+  }
   .right-menu {
     display: flex;
     align-items: center;
